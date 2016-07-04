@@ -1,17 +1,32 @@
 import React from 'react'
 import classes from './Hello.scss'
 
-export const Hello = (props) => {
-  return (
-    <div>
-      <h2 className={classes.counterContainer}>Hello {props.routeParams.room}</h2>
-    </div>
-  )
+class Hello extends React.Component {
+
+  componentDidMount() {
+    this.props.initRTC('bnon5rifq5dygb9', 3)
+  }
+
+  testConnection() {
+    this.props.emitRTC('yo')
+  }
+
+  render () {
+    return (
+      <div>
+        <h3>I am {this.props.connectionId}!</h3>
+        <button onClick={this.testConnection.bind(this)}>Connect</button>
+      </div>
+    )
+  }
 }
 
 Hello.propTypes = {
-  // conductor: React.PropTypes.number.isRequired,
-  // increment: React.PropTypes.func.isRequired
+  connectionId: React.PropTypes.string.isRequired,
+  connectRTC: React.PropTypes.func.isRequired,
+  initRTC: React.PropTypes.func.isRequired,
+  sendRTC: React.PropTypes.func.isRequired,
+  emitRTC: React.PropTypes.func.isRequired
 }
 
 export default Hello

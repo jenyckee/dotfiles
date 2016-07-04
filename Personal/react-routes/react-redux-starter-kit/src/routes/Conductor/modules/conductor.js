@@ -5,22 +5,56 @@ import Peer from 'peerjs'
 // Constants
 // ------------------------------------
 export const CONNECT = 'CONNECT'
+export const SEND = 'SEND'
 export const OPEN = 'OPEN'
+export const EMIT = 'EMIT'
+export const INIT = 'INIT'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function connect (c) {
+export function connectRTC (id) {
   return {
     type: CONNECT,
-    payload: c
+    peerId: id
   }
 }
 
-function open (id){
+export function openRTC (id) {
   return {
     type: OPEN,
-    payload: id
+    connectionId: id
+  }
+}
+
+export function initRTC (apiKey, debugLevel) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let c = new Peer({
+        key: apiKey,
+        debug: debugLevel
+      }).on('connection', connectRTC)
+        .on('error', error)
+        .on('open', (id) => dispatch(openRTC(id)))
+
+      dispatch({ type: 'INIT', connection: c })
+
+      resolve()
+    })
+  }
+}
+
+export function sendRTC (message, id) {
+  return {
+    type: SEND,
+    message: message
+  }
+}
+
+export function emitRTC (message) {
+  return {
+    type: EMIT,
+    message: message
   }
 }
 
@@ -29,30 +63,43 @@ function error (message) {
 }
 
 export const actions = {
-  connect,
-  open
+  connectRTC,
+  openRTC,
+  sendRTC,
+  emitRTC
 }
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [CONNECT]: (state, action) => state,
-  [OPEN]: (state, action) => state
+  [INIT]: (state, action) => {
+    return { ... state, connection: action.connection }
+  },
+  [SEND]: (state, action) => {
+    return state
+  },
+  [EMIT]: (state, action) => {
+    state.peers.forEach((peerId) => {
+      let peer = state.connection[peerId]
+    })
+    return state
+  },
+  [OPEN]: (state, action) => {
+    return { ... state, connectionId: action.connectionId }
+  },
+  [CONNECT]: (state, action) => {
+    console.log('connection', action)
+    return { ... state, peers: state.peers.push(action.peerId) }
+  }
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const connection = new Peer({
-  key: 'bnon5rifq5dygb9',
-  debug: 3
-}).on('connection', connect)
-  .on('error', error)
-  .on('open', open)
 
 
-const initialState = { peer: connection }
+const initialState = { connectionId: "Nothing", connection: null, peers: [] }
 export default function counterReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
