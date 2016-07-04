@@ -21,7 +21,7 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => {
   return {
-    connectionId: state.connectionId
+    connectionId: state.conductor.connectionId
   }
 }
 

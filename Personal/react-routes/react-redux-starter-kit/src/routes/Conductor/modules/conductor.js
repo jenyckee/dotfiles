@@ -74,6 +74,8 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [INIT]: (state, action) => {
+    console.log(state)
+
     return { ... state, connection: action.connection }
   },
   [SEND]: (state, action) => {
@@ -86,6 +88,7 @@ const ACTION_HANDLERS = {
     return state
   },
   [OPEN]: (state, action) => {
+    console.log(state)
     return { ... state, connectionId: action.connectionId }
   },
   [CONNECT]: (state, action) => {
@@ -99,7 +102,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 
 
-const initialState = { connectionId: "Nothing", connection: null, peers: [] }
+const initialState = { connectionId: "Not connected", connection: null, peers: [] }
 export default function counterReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
