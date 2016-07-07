@@ -1,6 +1,8 @@
 #!/bin/bash
 alias gs='git status'
 
+PATH=$HOME/.cabal/bin:$PATH
+
 cd() { builtin cd "$@" && ls; }
 
 #-------------------------------------------------------------------------------
@@ -35,7 +37,7 @@ function __prompt_command() {
             printf '\e]7;%s\a' "$PWD_URL"
         }
         PROMPT_COMMAND="update_terminal_cwd; $PROMPT_COMMAND"
-    fi 
+    fi
 
     local YELLOW="\[\e[33;1m\]"
     local GREEN="\[\e[32;1m\]"
@@ -45,18 +47,17 @@ function __prompt_command() {
     local DARK_GREY="\[\e[38;05;241m\]"
     local RED="\[\e[1;31m\]"
 
-    if [ $USER == "vagrant" ]; then 
-        echo "${LIGHT_CYAN}\u "; 
+    if [ $USER == "vagrant" ]; then
+        echo "${LIGHT_CYAN}\u ";
     fi
-    
+
     PS1+="${GREEN}\w${BLUE}\$(parse_git_branch)${GREEN}"
 
-    if [ $EXIT != 0 ]; then 
+    if [ $EXIT != 0 ]; then
         PS1+="${RED}λ";
-    else 
+    else
         PS1+="λ";
     fi
 
     PS1+=" ${GREY}"
 }
-
