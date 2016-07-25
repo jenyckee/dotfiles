@@ -1,7 +1,5 @@
-node_modules
-dist
-test/temp
-.sass-cache
-bower_components
-.tmp
-test/bower_components/
+*
+!.gitignore
+!.bashrc
+!.bash_profile
+!tomorrow.terminal
